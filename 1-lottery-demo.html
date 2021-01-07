@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <button>lottery</button>
+  </div>
+  <script>
+    function rand(m, n) {
+      return Math.ceil(Math.random() * (n - m + 1)) + m - 1;
+    }
+
+    const btn = document.querySelector('button');
+    btn.addEventListener('click', function() {
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          let n = rand(1, 100);
+          if (n <= 30) {
+            resolve(n);
+          } else {
+            reject(n);
+          }
+        }, 1000);
+      });
+      // 调用 then 方法
+      // 成功调用第一个回调函数，失败调用第二个
+      p.then((num) => {
+        alert(`you won, your number is ${num}`);
+      }, (num) => {
+        alert(`you lost, your number is ${num}`);
+      });
+    })
+  </script>
+</body>
+</html>

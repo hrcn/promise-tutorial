@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 111, then 222
+    let p = new Promise((resolve, reject) => {
+      // synchronous call
+      console.log(111);
+      reject('error')
+    });
+    console.log(222);
+
+    p.catch(reason => {
+      console.log(reason);
+    })
+
+    // 如果传入参数为非 Promise 类型的对象，则返回的结果为成功 Promise 对象
+    // 如果传入参数为 Promise 类型的对象，则参数的结果决定了resolve 结果
+    let p1 = Promise.resolve(521);
+    let p2 = Promise.resolve(new Promise((resolve, reject) => {
+      resolve('ok');
+    }))
+    console.log(p1); // PromiseState: fullfilled, PromiseResult: 521
+    console.log(p2); // PromiseState: fullfilled, PromiseResult: ok
+
+    let p3 = Promise.reject(521);
+    let p4 = Promise.reject(new Promise((resolve, reject) => {
+      resolve('ok');
+    }));
+    console.log(p3) // PromiseState: rejected, PromiseResult: 521
+    console.log(p4) // PromiseState: rejected, PromiseResult: Promise（此处为传递进来的成功的Promise对象）
+
+    const p5 = new Promise((resolve, reject) => {
+      resolve('ok');
+    });
+    const p6 = Promise.resolve('success');
+    const p7 = Promise.resolve('yeah');
+    const result = Promise.all([p5, p6, p7]);
+    // PromiseState: rejected, PromiseResult: Array(3)
+    // 在 PromiseResult 里面为：0: 'ok', 1: 'success', 2: 'yeah'
+    console.log(result);
+    
+    let p1 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('ok')
+      }, 1000);
+    })
+    let p2 = Promise.resolve('success');
+    let p3 = Promise.resolve('yeah')
+
+    const result = Promise.race([p1, p2, p3]);
+    console.log(result); // PromiseState: fullfilled, PromiseResult: success
+  </script>
+</body>
+</html>
